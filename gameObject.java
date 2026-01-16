@@ -1,8 +1,8 @@
 import java.awt.*;
 
 public abstract class gameObject {
-    protected Rectangle hitbox;
-    protected int speed;
+    private  Rectangle hitbox;
+    private  int speed;
 
     public Rectangle getHitbox() 
     { 
