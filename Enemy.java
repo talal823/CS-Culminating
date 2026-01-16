@@ -1,11 +1,11 @@
 import java.awt.*;
 
-public class Enemy {
+public final class Enemy extends gameObject{
     private int x;
     private int y;
-    private int width = 40;
-    private int height = 30;
-    private int speed;
+    private final int width = 40;
+    private final int height = 30;
+    private final int speed;
 
     public Enemy(int x, int y, int speed) {
         this.setX(x);
@@ -37,4 +37,8 @@ public class Enemy {
     }
 
     public int getY() { return y; }
+
+    public int getHeight() {
+        return height;
+    }
 }
