@@ -1,71 +1,86 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements ActionListener {
-    private MainFrame frame;
+
     private GameLogic logic;
     private Timer timer;
-    private String username;
     private boolean isGuest;
 
     public GamePanel(MainFrame frame, String username, boolean isGuest) {
-        this.frame = frame;
-        this.username = username;
         this.isGuest = isGuest;
-    
+
+        setPreferredSize(new Dimension(800, 600));
         setFocusable(true);
         setBackground(Color.BLACK);
-    
+
         logic = new GameLogic(username, isGuest);
-    
-        KeyManager km = new KeyManager(logic);
-        addKeyListener(km);
-    
+
+        // Keyboard input
+        KeyManager keyManager = new KeyManager(logic);
+        addKeyListener(keyManager);
+
+        // Game loop (≈60 FPS)
         timer = new Timer(16, this);
         timer.start();
-    
-        SwingUtilities.invokeLater(() -> {
-            requestFocusInWindow();
-        });
+
+        // Make sure panel gets focus
+        SwingUtilities.invokeLater(this::requestFocusInWindow);
     }
-    
 
     @Override
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draw background
+        // Background
         logic.getBackgroundManager().draw(g, getWidth(), getHeight());
 
-        // Draw player
+        // Player
         logic.getPlayer().draw(g);
 
-        // Draw bullets
+        // Bullets
         for (Bullet b : logic.getBullets()) {
             b.draw(g);
         }
 
-        // Draw enemies
+        // Enemies
         for (Enemy e : logic.getEnemies()) {
             e.draw(g);
         }
 
-        // Draw HUD
+        // HUD
+        // HUD
         g.setColor(Color.WHITE);
-        g.drawString("Score: " + logic.getScore(), 10, 20);
+        g.setFont(new Font("Arial", Font.BOLD, 18));
+        g.drawString("Score: " + logic.getScore(), 20, 30);
+
         if (!isGuest) {
-            g.drawString("Personal Highscore: " + logic.getPersonalHighscore(), 10, 40);
+            g.drawString("High Score: " + logic.getPersonalHighscore(), 20, 55);
         }
 
-        // Game Over
+
+        // Game Over screen
         if (logic.isGameOver()) {
-            g.setFont(new Font("Arial", Font.BOLD, 36));
-            g.drawString("GAME OVER", getWidth() / 2 - 120, getHeight() / 2);
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.drawString("GAME OVER", 260, 240);
+        
+            g.setFont(new Font("Arial", Font.PLAIN, 22));
+            g.drawString("Your Score: " + logic.getScore(), 290, 290);
+        
+            if (!isGuest) {
+                g.drawString("Personal High Score: " + logic.getPersonalHighscore(), 240, 325);
+                g.drawString("Global High Score: " + logic.getGlobalHighscore(), 250, 360);
+            } else {
+                g.drawString("Global High Score: " + logic.getGlobalHighscore(), 270, 330);
+            }
+        
             g.setFont(new Font("Arial", Font.PLAIN, 18));
-            g.drawString("Press R to Restart", getWidth() / 2 - 90, getHeight() / 2 + 40);
-            g.drawString("Global Highscore: " + FileManager.getGlobalHighscore(), getWidth() / 2 - 90, getHeight() / 2 + 70);
+            g.drawString("Press R to Restart", 300, 410);
         }
+        
+        
     }
 
     @Override
