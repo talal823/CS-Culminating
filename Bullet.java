@@ -1,14 +1,20 @@
 import java.awt.*;
 
 public class Bullet {
-    private int x, y, width = 4, height = 10, speed = 10;
+
+    private int x, y;
+    private final int width = 4;
+    private final int height = 10;
+    private final int speed = 10;
 
     public Bullet(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public void update() { y -= speed; }
+    public void update() {
+        y -= speed;
+    }
 
     public void draw(Graphics g) {
         g.setColor(Color.YELLOW);
@@ -21,13 +27,6 @@ public class Bullet {
         return r1.intersects(r2);
     }
 
-    public int getY() { 
-        return y; 
-    }
-
-    public int getX() 
-    { 
-        return x;
-    }
-
+    public int getY() { return y; }
+    public int getX() { return x; }
 }
