@@ -2,7 +2,6 @@ import java.awt.*;
 
 public abstract class gameObject {
     private  Rectangle hitbox;
-    private  int speed;
 
     public Rectangle getHitbox() 
     { 
