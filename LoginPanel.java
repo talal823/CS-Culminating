@@ -1,6 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import javax.swing.*;
 
 public class LoginPanel extends JPanel {
     private MainFrame frame;
@@ -59,7 +58,7 @@ public class LoginPanel extends JPanel {
         String password = new String(passwordField.getPassword());
 
         if (FileManager.verifyUser(username, password)) {
-            // Login success
+            // Login success (GamePanel constructor now updated to match this)
             frame.switchPanel(new GamePanel(frame, username, false));
         } else {
             messageLabel.setText("Invalid username or password!");
