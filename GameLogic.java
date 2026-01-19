@@ -13,6 +13,7 @@ public class GameLogic {
     // Utilities
     private Random random;
     private int globalHighscore;
+    private KeyManager keyManager; // Not final anymore
 
     // Game state
     private boolean gameOver;
@@ -31,17 +32,17 @@ public class GameLogic {
     // Shooting control
     private int shootCooldown;
 
-    //constructor
+    // Constructor: Removed KeyManager to fix circular dependency
     public GameLogic(String username, boolean isGuest) {
         this.username = username;
         this.isGuest = isGuest;
-
+        
         player = new Player(400, 500);
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
         bgManager = new BackgroundManager();
         random = new Random();
-        // Load global highscore ONCE
+        
         globalHighscore = FileManager.getGlobalHighscore();
 
         score = 0;
@@ -51,7 +52,6 @@ public class GameLogic {
         shootCooldown = 0;
         gameOver = false;
 
-        // Load personal highscore ONCE
         if (!isGuest) {
             personalHighscore = FileManager.getPersonalHighscore(username);
         } else {
@@ -59,9 +59,19 @@ public class GameLogic {
         }
     }
 
-    //update loop
+    // Setter for KeyManager
+    public void setKeyManager(KeyManager keyManager) {
+        this.keyManager = keyManager;
+    }
+
+    // Update loop
     public void update() {
         frameCounter++;
+        
+        // Ensure keyManager is set before using
+        if (keyManager != null) {
+            keyManager.update(); 
+        }
 
         // Survival score (slow → faster)
         if (frameCounter % 10 == 0) {
@@ -120,7 +130,6 @@ public class GameLogic {
         if (shootCooldown > 0) shootCooldown--;
     }
 
-    //gameover screen
     private void gameOver() {
         gameOver = true;
     
@@ -129,67 +138,42 @@ public class GameLogic {
             personalHighscore = Math.max(personalHighscore, score);
         }
     
-        // Refresh global highscore after saving
         globalHighscore = FileManager.getGlobalHighscore();
     }
     
-
-    //actions
+    // Actions
     public void shoot() {
         if (shootCooldown <= 0) {
             bullets.add(new Bullet(
                 player.getX() + player.getWidth() / 2 - 2,
                 player.getY()
             ));
-            shootCooldown = 10; // fire rate
+            shootCooldown = 10; 
         }
     }
 
     public void moveLeft() {
         if (player.getX() > 0) {
-            player.move(-8, 0);
+            player.move(-20, 0);
         }
     }
 
     public void moveRight() {
         if (player.getX() < 750) {
-            player.move(8, 0);
+            player.move(20, 0);
         }
     }
 
-    //getters
-    public Player getPlayer() {
-        return player;
-    }
-
-    public ArrayList<Bullet> getBullets() {
-        return bullets;
-    }
-
-    public ArrayList<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    public BackgroundManager getBackgroundManager() {
-        return bgManager;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public int getPersonalHighscore() {
-        return personalHighscore;
-    }
-    public int getGlobalHighscore() {
-        return globalHighscore;
-    }
+    // Getters
+    public Player getPlayer() { return player; }
+    public ArrayList<Bullet> getBullets() { return bullets; }
+    public ArrayList<Enemy> getEnemies() { return enemies; }
+    public BackgroundManager getBackgroundManager() { return bgManager; }
+    public int getScore() { return score; }
+    public boolean isGameOver() { return gameOver; }
+    public int getPersonalHighscore() { return personalHighscore; }
+    public int getGlobalHighscore() { return globalHighscore; }
     
-
     public void reset() {
         bullets.clear();
         enemies.clear();
