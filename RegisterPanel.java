@@ -1,5 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class RegisterPanel extends JPanel {
     private MainFrame frame;
