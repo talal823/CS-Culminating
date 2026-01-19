@@ -1,7 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -9,6 +9,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private Timer timer;
     private boolean isGuest;
 
+    // Removed KeyManager from arguments because it is created here
     public GamePanel(MainFrame frame, String username, boolean isGuest) {
         this.isGuest = isGuest;
 
@@ -16,10 +17,16 @@ public class GamePanel extends JPanel implements ActionListener {
         setFocusable(true);
         setBackground(Color.BLACK);
 
+        // 1. Create Logic first (without KeyManager)
         logic = new GameLogic(username, isGuest);
 
-        // Keyboard input
+        // 2. Create KeyManager passing Logic
         KeyManager keyManager = new KeyManager(logic);
+
+        // 3. Connect KeyManager back to Logic
+        logic.setKeyManager(keyManager);
+
+        // 4. Add the listener
         addKeyListener(keyManager);
 
         // Game loop (≈60 FPS)
@@ -51,7 +58,6 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         // HUD
-        // HUD
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
         g.drawString("Score: " + logic.getScore(), 20, 30);
@@ -59,7 +65,6 @@ public class GamePanel extends JPanel implements ActionListener {
         if (!isGuest) {
             g.drawString("High Score: " + logic.getPersonalHighscore(), 20, 55);
         }
-
 
         // Game Over screen
         if (logic.isGameOver()) {
@@ -79,8 +84,6 @@ public class GamePanel extends JPanel implements ActionListener {
             g.setFont(new Font("Arial", Font.PLAIN, 18));
             g.drawString("Press R to Restart", 300, 410);
         }
-        
-        
     }
 
     @Override
