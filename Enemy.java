@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public final class Enemy extends gameObject{
+public final class Enemy extends gameObject {
     private int x;
     private int y;
     private final int width = 40;
@@ -13,21 +13,21 @@ public final class Enemy extends gameObject{
         this.speed = speed;
     }
 
-    public int getX() {
-        return x;
-        
-    }
-
-    public void setX(int x) {
-        this.x = x;
-        
-    }
+    public int getX() { return x; }
+    public void setX(int x) { this.x = x; }
 
     public void update() { y += speed; }
 
     public void draw(Graphics g) {
-        g.setColor(Color.RED);
-        g.fillRect(getX(), y, width, height);
+        // DRAW IMAGE
+        if (ImageManager.enemyImg != null) {
+            g.drawImage(ImageManager.enemyImg, getX(), y, width, height, null);
+        } 
+        // FALLBACK: Draw red box if image missing
+        else {
+            g.setColor(Color.RED);
+            g.fillRect(getX(), y, width, height);
+        }
     }
 
     public boolean collides(Player p) {
@@ -37,8 +37,5 @@ public final class Enemy extends gameObject{
     }
 
     public int getY() { return y; }
-
-    public int getHeight() {
-        return height;
-    }
+    public int getHeight() { return height; }
 }
