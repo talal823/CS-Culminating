@@ -14,8 +14,15 @@ public class Player {
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.CYAN);
-        g.fillRect(x, y, width, height);
+        // DRAW IMAGE
+        if (ImageManager.playerImg != null) {
+            g.drawImage(ImageManager.playerImg, x, y, width, height, null);
+        } 
+        // FALLBACK: If image failed to load, draw a colored box
+        else {
+            g.setColor(Color.CYAN);
+            g.fillRect(x, y, width, height);
+        }
     }
 
     public int getX() { return x; }
